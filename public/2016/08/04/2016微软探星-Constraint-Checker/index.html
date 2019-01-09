@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>2016微软探星 | Constraint Checker - 小熊猫的花园</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2016微软探星 | Constraint Checker">
+<meta property="og:url" content="http://jane66.com/2016/08/04/2016微软探星-Constraint-Checker/index.html">
+<meta property="og:site_name" content="小熊猫的花园">
+<meta property="og:description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-645fb746e176c24b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-01-08T05:33:23.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2016微软探星 | Constraint Checker">
+<meta name="twitter:description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<link rel="alternative" href="/atom.xml" title="2016微软探星 | Constraint Checker" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?e30a7aa6e7eed9c7608595920393cdbe";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1149497,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="2016微软探星 | Constraint Checker" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">主页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2016微软探星 | Constraint Checker">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-08-04T02:56:12.000Z">2016-08-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/工作/">工作</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/工作/ACM/">ACM</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 820 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                2016微软探星 | Constraint Checker
+            
+        </h1>
+        <div class="content">
+            <p>题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。<br>本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。</p>
+<a id="more"></a>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<hr>
+<p>题目：</p>
+<p>时间限制:10000ms<br>单点时限:1000ms<br>内存限制:256MB</p>
+<p>描述<br>Given a set of constraints like <strong>0&lt;N&lt;=M&lt;=100</strong> and values for all the variables, write a checker program to determine if the constraints are satisfied.<br>More precisely, the format of constraints is:<br><strong>token op token op … op token</strong><br>where each token is either a constant integer or a variable represented by a capital letter and each op is either less-than ( &lt; ) or less-than-or-equal-to ( &lt;= ).<br>输入<br>The first line contains an integer N, the number of constraints. (1 ≤ N≤ 20)<br>Each of the following N lines contains a constraint in the previous mentioned format.<br>Then follows an integer T, the number of assignments to check. (1 ≤ T≤ 50)<br>Each assignment occupies K lines where K is the number of variables in the constraints.<br>Each line contains a capital letter and an integer, representing a variable and its value.<br>It is guaranteed that:</p>
+<ol>
+<li>Every token in the constraints is either an integer from 0 to 1000000 or an variable represented by a capital letter from ‘A’ to ‘Z’.</li>
+<li>There is no space in the constraints.</li>
+<li>In each assignment every variable appears exactly once and its value is from 0 to 1000000.<br>输出<br>For each assignment output Yes or No indicating if the constraints are satisfied.</li>
+</ol>
+<blockquote>
+<p>样例输入<br>2<br>A&lt;B&lt;=E<br>3&lt;=E&lt;5<br>2<br>A 1<br>B 2<br>E 3<br>A 3<br>B 5<br>E 10</p>
+</blockquote>
+<blockquote>
+<p>样例输出<br>Yes<br>No</p>
+</blockquote>
+<p>解释：<br>这道题题目还是比较容易理解，就是根据输入的若干个不等式，校验后面输入的数据是否都满足前面的不等式，满足就输出 Yes，只要有一个不满足就输出 No。如“A&lt;B&lt;=E，3&lt;=E&lt;5”这个两个关系式，对于输入 A ＝ 1，B ＝ 2，E ＝ 3 肯定满足，因为 1&lt;2&lt;=3，3&lt;=3&lt;5。而 A ＝ 3, B ＝ 5，E=10 就不满足，因为 3&lt;=10&lt;5 不成立。</p>
+<p>分析：<br>1、由于有所有不等式都要通过校验才输出 Yes，那么代表我们要在输入的时候就将所有不等式关系都存起来方便后面校验，这里我用了一个 vector 来存储这些关系，后面校验的时候遍历 vector 里面所有的值，一个个校验。<br>2、由于每个不等式关系只有”&lt;”或者”&lt;=”，说明这个关系是递增的，所以我用了 multimap&lt;int，string&gt;来存储这种关系（multimap 对于 key 是自增长排序，并且可以存储相同的 key）。来看看我对关系式的一个转换函数：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">multimap&lt;int,string&gt; convertStrToMap(string operation)</span><br><span class="line">&#123;</span><br><span class="line">    multimap&lt;int,string&gt; mapOp;</span><br><span class="line">    size_t len = operation.length();</span><br><span class="line">    int rank = 0;</span><br><span class="line">    int prior = 0;</span><br><span class="line">    for (int i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        char letter = operation[i];</span><br><span class="line">        if (letter == &apos;&lt;&apos;) &#123;</span><br><span class="line">            string str = operation.substr(prior, i - prior);</span><br><span class="line">            mapOp.insert(make_pair(rank, str));</span><br><span class="line">            if (i - prior == 1) &#123;</span><br><span class="line">                if (str[0] &gt;= &apos;A&apos; &amp;&amp; str[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">                    varMap.insert(make_pair(str[0], 0));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            prior = i + 1;</span><br><span class="line">            rank++;</span><br><span class="line">        &#125;</span><br><span class="line">        if (letter == &apos;=&apos;) &#123;</span><br><span class="line">            prior = i + 1;</span><br><span class="line">            rank--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    string str = operation.substr(prior, len - prior);</span><br><span class="line">    mapOp.insert(make_pair(rank, str));</span><br><span class="line">    if (len - prior == 1) &#123;</span><br><span class="line">        if (str[0] &gt;= &apos;A&apos; &amp;&amp; str[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">            varMap.insert(make_pair(str[0], 0));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return mapOp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回的 mapOp 就是将 string 类型的关系式转换后的 multimap，这里的 key 是 int 类型代表该变量或者数字是在关系式什么层级，value 是 string 类型方便后面转换成数字进行比较。例如，A&lt;B&lt;=E，在 multimap 中会存为｛0:A,1:B,1:E｝。这段代码还有个 varMap 变量，它是一个全局变量，用来记录关系式中出现的变量（题目规定了变量只能够是 A－Z）。<br>3、最后就是输入数据，更新 varMap，然后根据关系式比较看是否满足，输出结果。代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">int findValue(string input)</span><br><span class="line">&#123;</span><br><span class="line">    if (input.size() == 1 &amp;&amp; input[0] &gt;= &apos;A&apos; &amp;&amp; input[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">        return varMap[input[0]];</span><br><span class="line">    &#125;</span><br><span class="line">    return atoi(input.c_str());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void checker(vector&lt;multimap&lt;int,string&gt;&gt; opVec)</span><br><span class="line">&#123;</span><br><span class="line">    bool pass = true;</span><br><span class="line">    for (int i = 0; i &lt; opVec.size(); i++) &#123;</span><br><span class="line">        multimap&lt;int,string&gt; operation = opVec[i];</span><br><span class="line">        multimap&lt;int,string&gt;::iterator it;</span><br><span class="line">        int rank1 = -1, rank2 = -1;</span><br><span class="line">        int value1, value2;</span><br><span class="line">        string var1, var2;</span><br><span class="line">        for (it = operation.begin(); it !=operation.end(); it++) &#123;</span><br><span class="line">            if (rank1 == -1) &#123;</span><br><span class="line">                rank1 = it-&gt;first;</span><br><span class="line">                var1 = it-&gt;second;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            rank2 = it-&gt;first;</span><br><span class="line">            var2 = it-&gt;second;</span><br><span class="line">            value1 = findValue(var1);</span><br><span class="line">            value2 = findValue(var2);</span><br><span class="line">            if (rank1 == rank2) &#123; // &lt;=</span><br><span class="line">                if (value1 &lt;= value2) &#123;</span><br><span class="line">                    pass = true;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    pass = false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            else // &lt;</span><br><span class="line">            &#123;</span><br><span class="line">                if (value1 &lt; value2) &#123;</span><br><span class="line">                    pass = true;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    pass = false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (!pass) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            var1 = var2;</span><br><span class="line">            rank1 = rank2;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (!pass) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (pass) &#123;</span><br><span class="line">        cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于前面关系式已经按结构存储好了，所以只需要一步步比较校验即可。层级一样的变量，value 想等通过，层级不一样的，value1&lt;value2 即可。</p>
+<p>看一下判定结果：<br><img src="http://upload-images.jianshu.io/upload_images/2641798-645fb746e176c24b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>完整代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  main.cpp</span><br><span class="line">//  Constraint Checker</span><br><span class="line">//</span><br><span class="line">//  Created by Jiao Liu on 7/18/16.</span><br><span class="line">//  Copyright © 2016 ChangHong. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &lt;map&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line">map&lt;char,int&gt; varMap;</span><br><span class="line"></span><br><span class="line">multimap&lt;int,string&gt; convertStrToMap(string operation)</span><br><span class="line">&#123;</span><br><span class="line">    multimap&lt;int,string&gt; mapOp;</span><br><span class="line">    size_t len = operation.length();</span><br><span class="line">    int rank = 0;</span><br><span class="line">    int prior = 0;</span><br><span class="line">    for (int i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        char letter = operation[i];</span><br><span class="line">        if (letter == &apos;&lt;&apos;) &#123;</span><br><span class="line">            string str = operation.substr(prior, i - prior);</span><br><span class="line">            mapOp.insert(make_pair(rank, str));</span><br><span class="line">            if (i - prior == 1) &#123;</span><br><span class="line">                if (str[0] &gt;= &apos;A&apos; &amp;&amp; str[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">                    varMap.insert(make_pair(str[0], 0));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            prior = i + 1;</span><br><span class="line">            rank++;</span><br><span class="line">        &#125;</span><br><span class="line">        if (letter == &apos;=&apos;) &#123;</span><br><span class="line">            prior = i + 1;</span><br><span class="line">            rank--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    string str = operation.substr(prior, len - prior);</span><br><span class="line">    mapOp.insert(make_pair(rank, str));</span><br><span class="line">    if (len - prior == 1) &#123;</span><br><span class="line">        if (str[0] &gt;= &apos;A&apos; &amp;&amp; str[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">            varMap.insert(make_pair(str[0], 0));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return mapOp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int findValue(string input)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    if (input.size() == 1 &amp;&amp; input[0] &gt;= &apos;A&apos; &amp;&amp; input[0] &lt;= &apos;Z&apos;) &#123;</span><br><span class="line">        return varMap[input[0]];</span><br><span class="line">    &#125;</span><br><span class="line">    return atoi(input.c_str());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void checker(vector&lt;multimap&lt;int,string&gt;&gt; opVec)</span><br><span class="line">&#123;</span><br><span class="line">    bool pass = true;</span><br><span class="line">    for (int i = 0; i &lt; opVec.size(); i++) &#123;</span><br><span class="line">        multimap&lt;int,string&gt; operation = opVec[i];</span><br><span class="line">        multimap&lt;int,string&gt;::iterator it;</span><br><span class="line">        int rank1 = -1, rank2 = -1;</span><br><span class="line">        int value1, value2;</span><br><span class="line">        string var1, var2;</span><br><span class="line">        for (it = operation.begin(); it !=operation.end(); it++) &#123;</span><br><span class="line">            if (rank1 == -1) &#123;</span><br><span class="line">                rank1 = it-&gt;first;</span><br><span class="line">                var1 = it-&gt;second;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            rank2 = it-&gt;first;</span><br><span class="line">            var2 = it-&gt;second;</span><br><span class="line">            value1 = findValue(var1);</span><br><span class="line">            value2 = findValue(var2);</span><br><span class="line">            if (rank1 == rank2) &#123; // &lt;=</span><br><span class="line">                if (value1 &lt;= value2) &#123;</span><br><span class="line">                    pass = true;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    pass = false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            else // &lt;</span><br><span class="line">            &#123;</span><br><span class="line">                if (value1 &lt; value2) &#123;</span><br><span class="line">                    pass = true;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    pass = false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!pass) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            var1 = var2;</span><br><span class="line">            rank1 = rank2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!pass) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (pass) &#123;</span><br><span class="line">        cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int N;</span><br><span class="line">    scanf(&quot;%d&quot;,&amp;N);</span><br><span class="line">    vector&lt;multimap&lt;int,string&gt;&gt; opVec;</span><br><span class="line">    while (N--) &#123;</span><br><span class="line">        string op;</span><br><span class="line">        cin &gt;&gt; op;</span><br><span class="line">        multimap&lt;int,string&gt; operation = convertStrToMap(op);</span><br><span class="line">        opVec.push_back(operation);</span><br><span class="line">    &#125;</span><br><span class="line">    int T;</span><br><span class="line">    scanf(&quot;%d&quot;,&amp;T);</span><br><span class="line">    while (T--) &#123;</span><br><span class="line">        size_t numOfVar = varMap.size();</span><br><span class="line">        while (numOfVar--) &#123;</span><br><span class="line">            char letter;</span><br><span class="line">            int value;</span><br><span class="line">            cin&gt;&gt;letter&gt;&gt;value;</span><br><span class="line">            varMap[letter] = value;</span><br><span class="line">        &#125;</span><br><span class="line">        checker(opVec);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wepay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/08/22/剖析【OC】中深复制与浅复制/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">剖析【OC】中深复制与浅复制</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/08/02/用DFS来排座位/">
+                <span class="level-item">用DFS来排座位</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: false,
+        verify: false,
+        app_id: 'UTMT6ay76l4z8f7L5xTGDgo7-gzGzoHsz',
+        app_key: 'YzEiqgT2hio2QLCRupnfOSXz',
+        placeholder: '留下点什么吧...'
+    });
+</script>
+
+    </div>
+</div>
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="Jiao Liu">
+                    
+                    <p class="is-size-4 is-block">
+                        Jiao Liu
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Software Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Chengdu,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/JiaoLiu">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/JiaoLiu">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="简书" href="https://www.jianshu.com/u/39482dc75069">
+                
+                <i class="fa fa-book"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/GCJ/" style="font-size: 10px;">GCJ</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/tensorflow/" style="font-size: 10px;">tensorflow</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/小熊猫/" style="font-size: 20px;">小熊猫</a> <a href="/tags/小程序/" style="font-size: 10px;">小程序</a> <a href="/tags/招财/" style="font-size: 15px;">招财</a> <a href="/tags/新生/" style="font-size: 10px;">新生</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/移动端/" style="font-size: 15px;">移动端</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+  <div class="container">
+    <div class="level">
+      <div class="level-start has-text-centered-mobile">
+        <a class="footer-logo is-block has-mb-6" href="/">
+          
+          <img src="/images/logo.png" alt="2016微软探星 | Constraint Checker" height="28">
+          
+        </a>
+        <p class="is-size-7">
+          &copy; 2019 Jiao Liu&nbsp; All Rights Reserved.
+          <!-- at Chengdu,China -->
+        </p>
+      </div>
+      <div class="level-end">
+        
+        <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+           
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via E-mail" href="mailto:694121590@qq.com">
+              
+              <i class="fa fa-envelope"></i> 
+            </a>
+          </p>
+          
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via QQ" href="http://wpa.qq.com/msgrd?v=3&amp;uin=694121590&amp;site=jane66.com&amp;menu=yes">
+              
+              <i class="fab fa-qq"></i> 
+            </a>
+          </p>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

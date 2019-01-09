@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>剖析【OC】中深复制与浅复制 - 小熊猫的花园</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="在 OC 编程中，常常会用到对对象的复制，然后操作副本对象。然而对与应该选择何种对象复制的方式，复制后副本对象操作会不会影响原始对象等问题，我们往往没有过多考虑，而是凭借经验在编码。接下来就对 OC 中对象复制机制进行剖析，通过对复制机制的研究可以在编码中对对象的复制更加游刃有余。 首先，在 OC 中复制分为深复制与浅复制，一个比较认可的定义是：  深复制：复制对象引用与对象本身。浅复制：只复制对">
+<meta name="keywords" content="移动端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剖析【OC】中深复制与浅复制">
+<meta property="og:url" content="http://jane66.com/2016/08/22/剖析【OC】中深复制与浅复制/index.html">
+<meta property="og:site_name" content="小熊猫的花园">
+<meta property="og:description" content="在 OC 编程中，常常会用到对对象的复制，然后操作副本对象。然而对与应该选择何种对象复制的方式，复制后副本对象操作会不会影响原始对象等问题，我们往往没有过多考虑，而是凭借经验在编码。接下来就对 OC 中对象复制机制进行剖析，通过对复制机制的研究可以在编码中对对象的复制更加游刃有余。 首先，在 OC 中复制分为深复制与浅复制，一个比较认可的定义是：  深复制：复制对象引用与对象本身。浅复制：只复制对">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-03dca550cc87313d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-01-08T05:33:04.554Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="剖析【OC】中深复制与浅复制">
+<meta name="twitter:description" content="在 OC 编程中，常常会用到对对象的复制，然后操作副本对象。然而对与应该选择何种对象复制的方式，复制后副本对象操作会不会影响原始对象等问题，我们往往没有过多考虑，而是凭借经验在编码。接下来就对 OC 中对象复制机制进行剖析，通过对复制机制的研究可以在编码中对对象的复制更加游刃有余。 首先，在 OC 中复制分为深复制与浅复制，一个比较认可的定义是：  深复制：复制对象引用与对象本身。浅复制：只复制对">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-03dca550cc87313d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<link rel="alternative" href="/atom.xml" title="剖析【OC】中深复制与浅复制" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?e30a7aa6e7eed9c7608595920393cdbe";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1149497,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="剖析【OC】中深复制与浅复制" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">主页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="http://upload-images.jianshu.io/upload_images/2641798-03dca550cc87313d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="剖析【OC】中深复制与浅复制">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-08-22T02:58:02.000Z">2016-08-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/工作/">工作</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/工作/iOS/">iOS</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 分钟 读完 (大约 2838 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                剖析【OC】中深复制与浅复制
+            
+        </h1>
+        <div class="content">
+            <p>在 OC 编程中，常常会用到对对象的复制，然后操作副本对象。然而对与应该选择何种对象复制的方式，复制后副本对象操作会不会影响原始对象等问题，我们往往没有过多考虑，而是凭借经验在编码。接下来就对 OC 中对象复制机制进行剖析，通过对复制机制的研究可以在编码中对对象的复制更加游刃有余。</p>
+<p>首先，在 OC 中复制分为深复制与浅复制，一个比较认可的定义是：</p>
+<blockquote>
+<p><strong>深复制：</strong>复制对象引用与对象本身。<br><strong>浅复制：</strong>只复制对象引用。</p>
+</blockquote>
+<a id="more"></a>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-03dca550cc87313d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<hr>
+<p><strong>那么哪些操作才是浅复制，哪些操作是深复制？</strong></p>
+<p>所有的对象间赋值操作都是<strong>浅复制</strong>，仅仅复制了引用。如 CopyStr = Str1，这里 CopyStr 和 Str1 指向的同一内存地址，改变两者之间任何一个值，另一个都会随之改变。</p>
+<p>试例代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">void assignTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----Assign Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSString *str1 = @&quot;Hello&quot;;</span><br><span class="line">    NSString *str2 = str1;</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [NSMutableString stringWithString:@&quot;Hello&quot;];</span><br><span class="line">    NSMutableString *str4 = str3;</span><br><span class="line">    [str3 appendString:@&quot; World&quot;];</span><br><span class="line">    [str4 appendString:@&quot;!&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str4 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str4);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str4);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr1 = [NSMutableArray arrayWithObjects:@&quot;Hello&quot;, nil];</span><br><span class="line">    NSMutableArray *arr2 = arr1;</span><br><span class="line">    [arr1 addObject:@&quot;World&quot;];</span><br><span class="line">    [arr2 addObject:@&quot;!&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p><strong>—–Assign Test—–</strong></p>
+</blockquote>
+<hr>
+<p><strong>orignalStr : Hello</strong><br><strong>copyStr : Hello</strong><br><strong>orignalStr value address: 0x100002060</strong><br><strong>copyStr value address: 0x100002060</strong><br><strong>orignalStr pointer address: 0x7fff5fbff7a8</strong><br><strong>copyStr pointer address: 0x7fff5fbff7a0</strong></p>
+<hr>
+<p><strong>orignalStr : Hello World!</strong><br><strong>copyStr : Hello World!</strong><br><strong>orignalStr value address: 0x1002005c0</strong><br><strong>copyStr value address: 0x1002005c0</strong><br><strong>orignalStr pointer address: 0x7fff5fbff798</strong><br><strong>copyStr pointer address: 0x7fff5fbff790</strong></p>
+<hr>
+<p><strong>2016-08-22 11:35:20.312 CopyDemo[2046:72936] orignalArray : (</strong><br><strong>    Hello,</strong><br><strong>    World,</strong><br><strong>    “!”</strong><br><strong>)</strong><br><strong>2016-08-22 11:35:20.313 CopyDemo[2046:72936] copyArray : (</strong><br><strong>    Hello,</strong><br><strong>    World,</strong><br><strong>    “!”</strong><br><strong>)</strong><br><strong>orignalArray value address: 0x100406910</strong><br><strong>copyArray value address: 0x100406910</strong><br><strong>orignalArray pointer address: 0x7fff5fbff788</strong><br><strong>copyArray pointer address: 0x7fff5fbff780</strong></p>
+<hr>
+<p>通过上面结果我们可以看到，value 的地址都是一样的，而 pointer 的地址是不一样的，这就说明了赋值操作是浅复制，只是生成两份对象的引用，而对象本身还是同一份。原对象值和副本对象的值操作是相互影响的。</p>
+<hr>
+<p><strong>那么 OC 中如何实现深复制呢？ </strong></p>
+<p>OC 中深复制是通过 copy 与 mutableCopy 方法实现（但不是都能达到深复制的目的），通过 copy 复制后的副本都是不可变的，通过 mutableCopy 复制后的副本都是可变的。如初始对象为 NSString 与 NSMutableString，通过 copy 后副本都是 NSString，而通过 mutableCopy 后都是 NSMutableString。<br>接下来分两种情况讨论 copy 与 mutableCopy：</p>
+<p><strong>初始对象不可变（如 NSString、NSArray 等）</strong></p>
+<p>调用 copy 方法也是<strong>浅复制</strong>，等同于直接赋值，因为复制过后的副本和原来的对象都是不可变的，所以调用 copy 本质就是赋值操作，复制了引用，但是都指向同一内存地址。<br>调用 mutableCopy 是<strong>深复制</strong>，副本成为了可变对象，但是操作副本，对初始对象的值不会产生影响。</p>
+<p>试例代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">void constCopyTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----ConstCopy Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSString Copy-\n&quot;);</span><br><span class="line">    NSString *str1 = @&quot;Hello&quot;;</span><br><span class="line">    NSString *str2 = [str1 copy];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [str1 mutableCopy];</span><br><span class="line">    [str3 appendString:@&quot; World!&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSArray Copy-\n&quot;);</span><br><span class="line">    NSArray *arr1 = [NSArray arrayWithObjects:[NSMutableString stringWithString:@&quot;Hello&quot;], nil];</span><br><span class="line">    NSArray *arr2 = [arr1 copy];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; World!&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr3 = [arr1 mutableCopy];</span><br><span class="line">    [arr3 addObject:@&quot;World&quot;];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; + str1&quot;];</span><br><span class="line">    [[arr3 objectAtIndex:0] appendString:@&quot; + str3&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p><strong>—–ConstCopy Test—–</strong></p>
+</blockquote>
+<hr>
+<p><strong>-NSString Copy-</strong><br><strong>orignalStr : Hello</strong><br><strong>copyStr : Hello</strong><br><strong>orignalStr value address: 0x100002060</strong><br><strong>copyStr value address: 0x100002060</strong><br><strong>orignalStr pointer address: 0x7fff5fbff7a8</strong><br><strong>copyStr pointer address: 0x7fff5fbff7a0</strong></p>
+<hr>
+<p><strong>orignalStr : Hello</strong><br><strong>copyStr : Hello World!</strong><br><strong>orignalStr value address: 0x100002060</strong><br><strong>copyStr value address: 0x1004074d0</strong><br><strong>orignalStr pointer address: 0x7fff5fbff7a8</strong><br><strong>copyStr pointer address: 0x7fff5fbff798</strong></p>
+<hr>
+<p><strong>-NSArray Copy-</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] orignalArray : (</strong><br><strong>    “Hello World!”</strong><br><strong>)</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] copyArray : (</strong><br><strong>    “Hello World!”</strong><br><strong>)</strong><br><strong>orignalArray value address: 0x1001016b0</strong><br><strong>copyArray value address: 0x1001016b0</strong><br><strong>orignalArray pointer address: 0x7fff5fbff790</strong><br><strong>copyArray pointer address: 0x7fff5fbff788</strong></p>
+<hr>
+<p><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] orignalArray : (</strong><br><strong>    “Hello World! + str1 + str3”</strong><br><strong>)</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] copyArray : (</strong><br><strong>    “Hello World! + str1 + str3”,</strong><br><strong>    World</strong><br><strong>)</strong><br><strong>orignalArray value address: 0x1001016b0</strong><br><strong>copyArray value address: 0x100300000</strong><br><strong>orignalArray pointer address: 0x7fff5fbff790</strong><br><strong>copyArray pointer address: 0x7fff5fbff780</strong></p>
+<hr>
+<p>输出结果可以看到，通过 copy 方法复制后的副本对象的 value 地址和原对象是一样的，所以针对不可变对象是用 copy 方法是浅复制。而 mutableCopy 方法复制后，副本对象的 value 和 pointer 地址都和原对象不一样了，说明 mutableCopy 方法是深复制。</p>
+<p><strong>初始对象可变（如 NSMutableString、NSMutableArray 等）</strong></p>
+<p>调用 copy 方法是<strong>深复制</strong>，因为这里副本是不可变的，所以只考虑初始对象改变。因为是深复制，初始对象无论怎么改变，副本的值都是不变的。<br>调用 mutableCopy 也是<strong>深复制</strong>，复制过后，副本与初始对象之间的改变都是独立不影响的，如初始对象 str = “example”，str+” append1”，副本 str+” append2”，最终输出结果会是初始对象为”example append1”，副本为”example append2”。</p>
+<p>试例代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">void mutableCopyTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----MutableCopy Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSString Copy-\n&quot;);</span><br><span class="line">    NSMutableString *str1 = [NSMutableString stringWithString:@&quot;Hello&quot;];</span><br><span class="line">    NSString *str2 = [str1 copy];</span><br><span class="line">    [str1 appendString:@&quot; World&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [str1 mutableCopy];</span><br><span class="line">    [str1 appendString:@&quot; + str1&quot;];</span><br><span class="line">    [str3 appendString:@&quot; + str3&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSArray Copy-\n&quot;);</span><br><span class="line">    NSMutableArray *arr1 = [NSMutableArray arrayWithObjects:[NSMutableString stringWithString:@&quot;Hello&quot;], nil];</span><br><span class="line">    NSArray *arr2 = [arr1 copy];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; World!&quot;];</span><br><span class="line">    [arr1 addObject:@&quot;Word&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr3 = [arr1 mutableCopy];</span><br><span class="line">    [arr1 addObject:@&quot;+arr1&quot;];</span><br><span class="line">    [arr3 addObject:@&quot;+arr3&quot;];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; + str1&quot;];</span><br><span class="line">    [[arr3 objectAtIndex:0] appendString:@&quot; + str3&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<blockquote>
+<p><strong>—–MutableCopy Test—–</strong></p>
+</blockquote>
+<hr>
+<p><strong>-NSString Copy-</strong><br><strong>orignalStr : Hello World</strong><br><strong>copyStr : Hello</strong><br><strong>orignalStr value address: 0x100300080</strong><br><strong>copyStr value address: 0x6f6c6c654855</strong><br><strong>orignalStr pointer address: 0x7fff5fbff7a8</strong><br><strong>copyStr pointer address: 0x7fff5fbff7a0</strong></p>
+<hr>
+<p><strong>orignalStr : Hello World + str1</strong><br><strong>copyStr : Hello World + str3</strong><br><strong>orignalStr value address: 0x100300080</strong><br><strong>copyStr value address: 0x100300320</strong><br><strong>orignalStr pointer address: 0x7fff5fbff7a8</strong><br><strong>copyStr pointer address: 0x7fff5fbff798</strong></p>
+<hr>
+<p><strong>-NSArray Copy-</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] orignalArray : (</strong><br><strong>    “Hello World!”,</strong><br><strong>    Word</strong><br><strong>)</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] copyArray : (</strong><br><strong>    “Hello World!”</strong><br><strong>)</strong><br><strong>orignalArray value address: 0x100300000</strong><br><strong>copyArray value address: 0x100300b00</strong><br><strong>orignalArray pointer address: 0x7fff5fbff790</strong><br><strong>copyArray pointer address: 0x7fff5fbff788</strong></p>
+<hr>
+<p><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] orignalArray : (</strong><br><strong>    “Hello World! + str1 + str3”,</strong><br><strong>    Word,</strong><br><strong>    “+arr1”</strong><br><strong>)</strong><br><strong>2016-08-22 11:35:20.314 CopyDemo[2046:72936] copyArray : (</strong><br><strong>    “Hello World! + str1 + str3”,</strong><br><strong>    Word,</strong><br><strong>    “+arr3”</strong><br><strong>)</strong><br><strong>orignalArray value address: 0x100300000</strong><br><strong>copyArray value address: 0x100300e40</strong><br><strong>orignalArray pointer address: 0x7fff5fbff790</strong><br><strong>copyArray pointer address: 0x7fff5fbff780</strong></p>
+<hr>
+<p>通过输出结果可以看到，对于可变对象，调用 copy 与 mutableCopy 方法都是深复制，因为副本的 value 和 pointer 地址都与原对象不同。</p>
+<p><code>注：对于网上某些解释说NSArray/NSMutableArray NSDictionary/NSMutableDictionary只有浅复制，这里认为对于对象本身来说调用mutableCopy或对于可变对象调用copy都是深复制，只能说对于数组和字典这种复合结构深复制操作只是作用到外层对象，内部如果还有可变对象，仅仅就是引用的复制。（上面的例子中对于数组的第一个元素的操作可以很清楚的看出来。即使是对数组的深复制，然而改变第一个可变字符串，无论是副本数组还是原数组的第一个字符串都改变了。）</code></p>
+<p>完整代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  main.m</span><br><span class="line">//  CopyDemo</span><br><span class="line">//</span><br><span class="line">//  Created by Jiao Liu on 6/23/16.</span><br><span class="line">//  Copyright © 2016 ChangHong. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">void mutableCopyTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----MutableCopy Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSString Copy-\n&quot;);</span><br><span class="line">    NSMutableString *str1 = [NSMutableString stringWithString:@&quot;Hello&quot;];</span><br><span class="line">    NSString *str2 = [str1 copy];</span><br><span class="line">    [str1 appendString:@&quot; World&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [str1 mutableCopy];</span><br><span class="line">    [str1 appendString:@&quot; + str1&quot;];</span><br><span class="line">    [str3 appendString:@&quot; + str3&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSArray Copy-\n&quot;);</span><br><span class="line">    NSMutableArray *arr1 = [NSMutableArray arrayWithObjects:[NSMutableString stringWithString:@&quot;Hello&quot;], nil];</span><br><span class="line">    NSArray *arr2 = [arr1 copy];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; World!&quot;];</span><br><span class="line">    [arr1 addObject:@&quot;Word&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr3 = [arr1 mutableCopy];</span><br><span class="line">    [arr1 addObject:@&quot;+arr1&quot;];</span><br><span class="line">    [arr3 addObject:@&quot;+arr3&quot;];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; + str1&quot;];</span><br><span class="line">    [[arr3 objectAtIndex:0] appendString:@&quot; + str3&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void constCopyTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----ConstCopy Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSString Copy-\n&quot;);</span><br><span class="line">    NSString *str1 = @&quot;Hello&quot;;</span><br><span class="line">    NSString *str2 = [str1 copy];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [str1 mutableCopy];</span><br><span class="line">    [str3 appendString:@&quot; World!&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;-NSArray Copy-\n&quot;);</span><br><span class="line">    NSArray *arr1 = [NSArray arrayWithObjects:[NSMutableString stringWithString:@&quot;Hello&quot;], nil];</span><br><span class="line">    NSArray *arr2 = [arr1 copy];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; World!&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr3 = [arr1 mutableCopy];</span><br><span class="line">    [arr3 addObject:@&quot;World&quot;];</span><br><span class="line">    [[arr1 objectAtIndex:0] appendString:@&quot; + str1&quot;];</span><br><span class="line">    [[arr3 objectAtIndex:0] appendString:@&quot; + str3&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr3);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr3);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void assignTest()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;-----Assign Test-----\n\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSString *str1 = @&quot;Hello&quot;;</span><br><span class="line">    NSString *str2 = str1;</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str1 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str2 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str1);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str2);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str1);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableString *str3 = [NSMutableString stringWithString:@&quot;Hello&quot;];</span><br><span class="line">    NSMutableString *str4 = str3;</span><br><span class="line">    [str3 appendString:@&quot; World&quot;];</span><br><span class="line">    [str4 appendString:@&quot;!&quot;];</span><br><span class="line">    printf(&quot;orignalStr : %s\n&quot;,[str3 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;copyStr : %s\n&quot;,[str4 cStringUsingEncoding:NSUTF8StringEncoding]);</span><br><span class="line">    printf(&quot;orignalStr value address: %p\n&quot;,str3);</span><br><span class="line">    printf(&quot;copyStr value address: %p\n&quot;,str4);</span><br><span class="line">    printf(&quot;orignalStr pointer address: %p\n&quot;,&amp;str3);</span><br><span class="line">    printf(&quot;copyStr pointer address: %p\n&quot;,&amp;str4);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *arr1 = [NSMutableArray arrayWithObjects:@&quot;Hello&quot;, nil];</span><br><span class="line">    NSMutableArray *arr2 = arr1;</span><br><span class="line">    [arr1 addObject:@&quot;World&quot;];</span><br><span class="line">    [arr2 addObject:@&quot;!&quot;];</span><br><span class="line">    NSLog(@&quot;orignalArray : %@&quot;,arr1);</span><br><span class="line">    NSLog(@&quot;copyArray : %@&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray value address: %p\n&quot;,arr1);</span><br><span class="line">    printf(&quot;copyArray value address: %p\n&quot;,arr2);</span><br><span class="line">    printf(&quot;orignalArray pointer address: %p\n&quot;,&amp;arr1);</span><br><span class="line">    printf(&quot;copyArray pointer address: %p\n&quot;,&amp;arr2);</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        assignTest();</span><br><span class="line">        constCopyTest();</span><br><span class="line">        mutableCopyTest();</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>本文最早发布于长虹软服公众号，有兴趣的朋友可以去看一下：<br><a href="http://mp.weixin.qq.com/s?__biz=MzAwMjkxNjYzNA==&amp;mid=2247483852&amp;idx=1&amp;sn=9da01b2399427654ad12e36452f612c9&amp;scene=23&amp;srcid=0822iBXKqaGYwMOnRhVLxNVt#rd" target="_blank" rel="noopener">剖析【OC】中深复制与浅复制</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/移动端/">移动端</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wepay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/04/28/iOS实现类Prisma软件/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">iOS实现类Prisma软件</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/08/04/2016微软探星-Constraint-Checker/">
+                <span class="level-item">2016微软探星 | Constraint Checker</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: false,
+        verify: false,
+        app_id: 'UTMT6ay76l4z8f7L5xTGDgo7-gzGzoHsz',
+        app_key: 'YzEiqgT2hio2QLCRupnfOSXz',
+        placeholder: '留下点什么吧...'
+    });
+</script>
+
+    </div>
+</div>
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="Jiao Liu">
+                    
+                    <p class="is-size-4 is-block">
+                        Jiao Liu
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Software Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Chengdu,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/JiaoLiu">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/JiaoLiu">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="简书" href="https://www.jianshu.com/u/39482dc75069">
+                
+                <i class="fa fa-book"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/GCJ/" style="font-size: 10px;">GCJ</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/tensorflow/" style="font-size: 10px;">tensorflow</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/小熊猫/" style="font-size: 20px;">小熊猫</a> <a href="/tags/小程序/" style="font-size: 10px;">小程序</a> <a href="/tags/招财/" style="font-size: 15px;">招财</a> <a href="/tags/新生/" style="font-size: 10px;">新生</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/移动端/" style="font-size: 15px;">移动端</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+  <div class="container">
+    <div class="level">
+      <div class="level-start has-text-centered-mobile">
+        <a class="footer-logo is-block has-mb-6" href="/">
+          
+          <img src="/images/logo.png" alt="剖析【OC】中深复制与浅复制" height="28">
+          
+        </a>
+        <p class="is-size-7">
+          &copy; 2019 Jiao Liu&nbsp; All Rights Reserved.
+          <!-- at Chengdu,China -->
+        </p>
+      </div>
+      <div class="level-end">
+        
+        <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+           
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via E-mail" href="mailto:694121590@qq.com">
+              
+              <i class="fa fa-envelope"></i> 
+            </a>
+          </p>
+          
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via QQ" href="http://wpa.qq.com/msgrd?v=3&amp;uin=694121590&amp;site=jane66.com&amp;menu=yes">
+              
+              <i class="fab fa-qq"></i> 
+            </a>
+          </p>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

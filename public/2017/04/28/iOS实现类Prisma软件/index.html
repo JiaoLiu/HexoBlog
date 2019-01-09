@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>iOS实现类Prisma软件 - 小熊猫的花园</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="前言 Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow 整">
+<meta name="keywords" content="移动端,机器学习,tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS实现类Prisma软件">
+<meta property="og:url" content="http://jane66.com/2017/04/28/iOS实现类Prisma软件/index.html">
+<meta property="og:site_name" content="小熊猫的花园">
+<meta property="og:description" content="前言 Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow 整">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-ca34abd1c875504c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-d105c1089f62c634.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-6b722e433ca66c5b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-1b5acd6620b5b447.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-01-08T05:33:09.282Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS实现类Prisma软件">
+<meta name="twitter:description" content="前言 Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow 整">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<link rel="alternative" href="/atom.xml" title="iOS实现类Prisma软件" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?e30a7aa6e7eed9c7608595920393cdbe";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1149497,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="iOS实现类Prisma软件" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">主页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="iOS实现类Prisma软件">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-04-28T02:42:21.000Z">2017-04-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/工作/">工作</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/工作/iOS/">iOS</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1750 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                iOS实现类Prisma软件
+            
+        </h1>
+        <div class="content">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+<p>Prisma 在 2016 上线后就大火，该 APP 是利用<a href="https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" target="_blank" rel="noopener">神经网络</a>和<a href="https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD" target="_blank" rel="noopener">人工智能</a>技术，为普通照片加入艺术效果的照片编辑软件。</p>
+<p>同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。</p>
+<p>最近在研究 Tensorflow 整合 iOS 过程中，发现 google 公开了论文实现的源码和训练数据，也就是说我们可以通过自己写一个前向运算图，整合其训练参数就可以快速实现类 Prisma 的应用。</p>
+<p>下面就介绍一下如何在 iPhone 上跑一个自己的<strong>“Prisma”</strong>。</p>
+<a id="more"></a>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="招财和咕噜"></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><hr>
+<ol>
+<li>安装<a href="https://www.tensorflow.org/versions/r0.12/get_started/os_setup.html#download-and-setup" target="_blank" rel="noopener">Tensorflow</a>，这个官网上有详细教程这里就不多说了。</li>
+<li>搭建<a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/ios_examples/" target="_blank" rel="noopener">iOS+Tensorflow</a>工程，这个可以根据 Git 上的步骤实现，也可以参考官方的 Demo 程序配置。（这个过程有很多坑，多次尝试，应该可以配置成功）</li>
+<li>下载模型，本次使用的模型是<a href="https://github.com/tensorflow/magenta/tree/master/magenta/models/image_stylization" target="_blank" rel="noopener">image_stylization</a>，google 已开源在 GitHub 上。</li>
+<li>下载训练好的参数，Google 提供了 2 个：<br><a href="http://download.magenta.tensorflow.org/models/multistyle-pastiche-generator-monet.ckpt" target="_blank" rel="noopener">Monet</a><br><a href="http://download.magenta.tensorflow.org/models/multistyle-pastiche-generator-varied.ckpt" target="_blank" rel="noopener">Varied</a><br>Monet 训练了 10 种艺术图片，Varied 训练了 32 种。<br>当然你也可以自己训练艺术图片，但是得下载 VGG 的训练参数和 ImageNet 数据，然后自己训练，比较花时间。</li>
+</ol>
+<h2 id="构建计算图"><a href="#构建计算图" class="headerlink" title="构建计算图"></a>构建计算图</h2><hr>
+<p>虽然 Google 提供了模型的源码，但是并没有在源码中输出运算图已方便迁移到移动设备中使用，Android 的 Demo 中倒是提供了生成的 pb，如何觉得自己写计算图麻烦可以直接拷到自己 iOS 工程中使用。</p>
+<p>我这里创建了一个 python 的工程，然后把 Google 源码中 model.py 相关的文件都加入了工程。<br>我的建图代码如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import tensorflow as tf</span><br><span class="line">import ast</span><br><span class="line">import os</span><br><span class="line">from tensorflow.python import pywrap_tensorflow</span><br><span class="line"></span><br><span class="line">from matplotlib import pyplot</span><br><span class="line">from matplotlib.pyplot import imshow</span><br><span class="line"></span><br><span class="line">import image_utils</span><br><span class="line">import model</span><br><span class="line">import ops</span><br><span class="line">import argparse</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">num_styles = 32</span><br><span class="line">imgWidth = 512</span><br><span class="line">imgHeight = 512</span><br><span class="line">channel = 3</span><br><span class="line">checkpoint = &quot;/Users/Jiao/Desktop/TFProject/style-image/checkpoint/multistyle-pastiche-generator-varied.ckpt&quot;</span><br><span class="line"></span><br><span class="line">inputImage = tf.placeholder(tf.float32,shape=[None,imgWidth,imgHeight,channel],name=&quot;input&quot;)</span><br><span class="line">styles = tf.placeholder(tf.float32,shape=[num_styles],name=&quot;style&quot;)</span><br><span class="line"></span><br><span class="line">with tf.name_scope(&quot;&quot;):</span><br><span class="line">    transform = model.transform(inputImage,</span><br><span class="line">                            normalizer_fn=ops.weighted_instance_norm,</span><br><span class="line">                            normalizer_params=&#123;</span><br><span class="line">                                # &apos;weights&apos;: tf.constant(mixture),</span><br><span class="line">                                &apos;weights&apos; : styles,</span><br><span class="line">                                &apos;num_categories&apos;: num_styles,</span><br><span class="line">                                &apos;center&apos;: True,</span><br><span class="line">                                &apos;scale&apos;: True&#125;)</span><br><span class="line"></span><br><span class="line">model_saver = tf.train.Saver(tf.global_variables())</span><br><span class="line"></span><br><span class="line">with tf.Session() as sess:</span><br><span class="line">    tf.train.write_graph(sess.graph_def, &quot;/Users/Jiao/Desktop/TFProject/style-image/protobuf&quot;, &quot;input.pb&quot;)</span><br><span class="line">    #checkpoint = os.path.expanduser(checkpoint)</span><br><span class="line">    #if tf.gfile.IsDirectory(checkpoint):</span><br><span class="line">    #    checkpoint = tf.train.latest_checkpoint(checkpoint)</span><br><span class="line">    #    tf.logging.info(&apos;loading latest checkpoint file: &#123;&#125;&apos;.format(checkpoint))</span><br><span class="line">    #model_saver.restore(sess, checkpoint)</span><br><span class="line"></span><br><span class="line">    #newstyle = np.zeros([num_styles], dtype=np.float32)</span><br><span class="line">    #newstyle[18] = 0.5</span><br><span class="line">    #newstyle[17] = 0.5</span><br><span class="line">    #newImage = np.zeros((1,imgWidth,imgHeight,channel))</span><br><span class="line">    #style_image = transform.eval(feed_dict=&#123;inputImage:newImage,styles:newstyle&#125;)</span><br><span class="line">    #style_image = style_image[0]</span><br><span class="line">    #imshow(style_image)</span><br><span class="line">    #pyplot.show()</span><br></pre></td></tr></table></figure>
+<p>这里输入节点是<code>input</code>和<code>style</code>，输出节点是 model 中的<code>transformer/expand/conv3/conv/Sigmoid</code>。</p>
+<p>到此就将模型的计算图保存到了本地文件夹中。<br>接下来就是将图和 ckpt 中的参数合并，并且生成移动端的可以使用的 pb 文件，这一步可以参考我上一篇文章<a href="http://www.jianshu.com/p/f096fe2212ce" target="_blank" rel="noopener">《iOS+Tensorflow 实现图像识别》</a>，很容易就实现。</p>
+<h2 id="iOS-工程"><a href="#iOS-工程" class="headerlink" title="iOS 工程"></a>iOS 工程</h2><hr>
+<p>在上面准备工作中，如果你已经按步骤搭建好 iOS+TF 的工程，这里你只需要导入生成的最终 pb 文件就行了。工程结构如图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-ca34abd1c875504c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="XCode工程"></p>
+<p>然后在 iOS 使用 pb 文件，我这里直接导入了 Google 提供的<code>tensorflow_utils</code>，使用这个类里面的 LoadModel 方法可以很快的生成含有计算图的 session。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    tensorflow::Status load_status;</span><br><span class="line">    load_status = LoadModel(@&quot;rounded_graph&quot;, @&quot;pb&quot;, &amp;tf_session);</span><br><span class="line">    if (!load_status.ok()) &#123;</span><br><span class="line">        LOG(FATAL) &lt;&lt; &quot;Couldn&apos;t load model: &quot; &lt;&lt; load_status;</span><br><span class="line">    &#125;</span><br><span class="line">    currentStyle = 0;</span><br><span class="line">    isDone = true;</span><br><span class="line">    _styleImageView.layer.borderColor = [UIColor grayColor].CGColor;</span><br><span class="line">    _styleImageView.layer.borderWidth = 0.5;</span><br><span class="line">    _ogImageView.layer.borderColor = [UIColor grayColor].CGColor;</span><br><span class="line">    _ogImageView.layer.borderWidth = 0.5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后就是获取图片，执行运算，生成艺术图片展示。这里图片需要转换成 bitmap 然后获取 data 值，展示图片也是相识的过程。具体代码如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">- (void)runCnn:(UIImage *)compressedImg</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char *pixels = [self getImagePixel:compressedImg];</span><br><span class="line">    int image_channels = 4;</span><br><span class="line">    tensorflow::Tensor image_tensor(</span><br><span class="line">                                    tensorflow::DT_FLOAT,</span><br><span class="line">                                    tensorflow::TensorShape(</span><br><span class="line">                                                            &#123;1, wanted_input_height, wanted_input_width, wanted_input_channels&#125;));</span><br><span class="line">    auto image_tensor_mapped = image_tensor.tensor&lt;float, 4&gt;();</span><br><span class="line">    tensorflow::uint8 *in = pixels;</span><br><span class="line">    float *out = image_tensor_mapped.data();</span><br><span class="line">    for (int y = 0; y &lt; wanted_input_height; ++y) &#123;</span><br><span class="line">        float *out_row = out + (y * wanted_input_width * wanted_input_channels);</span><br><span class="line">        for (int x = 0; x &lt; wanted_input_width; ++x) &#123;</span><br><span class="line">            tensorflow::uint8 *in_pixel =</span><br><span class="line">            in + (x * wanted_input_width * image_channels) + (y * image_channels);</span><br><span class="line">            float *out_pixel = out_row + (x * wanted_input_channels);</span><br><span class="line">            for (int c = 0; c &lt; wanted_input_channels; ++c) &#123;</span><br><span class="line">                out_pixel[c] = in_pixel[c];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    tensorflow::Tensor style(tensorflow::DT_FLOAT, tensorflow::TensorShape(&#123;32&#125;));</span><br><span class="line">    float *style_data = style.tensor&lt;float, 1&gt;().data();</span><br><span class="line">    memset(style_data, 0, sizeof(float) * 32);</span><br><span class="line">    style_data[currentStyle] = 1;</span><br><span class="line"></span><br><span class="line">    if (tf_session.get()) &#123;</span><br><span class="line">        std::vector&lt;tensorflow::Tensor&gt; outputs;</span><br><span class="line">        tensorflow::Status run_status = tf_session-&gt;Run(</span><br><span class="line">                                                        &#123;&#123;contentNode, image_tensor&#125;,</span><br><span class="line">                                                            &#123;styleNode, style&#125;&#125;,</span><br><span class="line">                                                        &#123;outputNode&#125;,</span><br><span class="line">                                                        &#123;&#125;,</span><br><span class="line">                                                        &amp;outputs);</span><br><span class="line">        if (!run_status.ok()) &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; &quot;Running model failed:&quot; &lt;&lt; run_status;</span><br><span class="line">            isDone = true;</span><br><span class="line">            free(pixels);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            float *styledData = outputs[0].tensor&lt;float,4&gt;().data();</span><br><span class="line">            UIImage *styledImg = [self createImage:styledData];</span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                _styleImageView.image = styledImg;</span><br><span class="line">                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                    isDone = true;</span><br><span class="line">                    free(pixels);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (unsigned char *)getImagePixel:(UIImage *)image</span><br><span class="line">&#123;</span><br><span class="line">    int width = image.size.width;</span><br><span class="line">    int height = image.size.height;</span><br><span class="line">    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));</span><br><span class="line">    NSUInteger bytesPerPixel = 4;</span><br><span class="line">    NSUInteger bytesPerRow = bytesPerPixel * width;</span><br><span class="line">    NSUInteger bitsPerComponent = 8;</span><br><span class="line">    CGContextRef context = CGBitmapContextCreate(rawData, width, height,</span><br><span class="line"></span><br><span class="line">                                                 bitsPerComponent, bytesPerRow, colorSpace,</span><br><span class="line"></span><br><span class="line">                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);</span><br><span class="line"></span><br><span class="line">    CGColorSpaceRelease(colorSpace);</span><br><span class="line">    CGContextDrawImage(context, CGRectMake(0, 0, width, height), image.CGImage);</span><br><span class="line">    UIImage *ogImg = [UIImage imageWithCGImage:CGBitmapContextCreateImage(context)];</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        _ogImageView.image = ogImg;</span><br><span class="line">    &#125;);</span><br><span class="line">    CGContextRelease(context);</span><br><span class="line">    return rawData;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIImage *)createImage:(float *)pixels</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char *rawData = (unsigned char*) calloc(wanted_input_height * wanted_input_width * 4, sizeof(unsigned char));</span><br><span class="line">    for (int y = 0; y &lt; wanted_input_height; ++y) &#123;</span><br><span class="line">        unsigned char *out_row = rawData + (y * wanted_input_width * 4);</span><br><span class="line">        for (int x = 0; x &lt; wanted_input_width; ++x) &#123;</span><br><span class="line">            float *in_pixel =</span><br><span class="line">            pixels + (x * wanted_input_width * 3) + (y * 3);</span><br><span class="line">            unsigned char *out_pixel = out_row + (x * 4);</span><br><span class="line">            for (int c = 0; c &lt; wanted_input_channels; ++c) &#123;</span><br><span class="line">                out_pixel[c] = in_pixel[c] * 255;</span><br><span class="line">            &#125;</span><br><span class="line">            out_pixel[3] = UINT8_MAX;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">    NSUInteger bytesPerPixel = 4;</span><br><span class="line">    NSUInteger bytesPerRow = bytesPerPixel * wanted_input_width;</span><br><span class="line">    NSUInteger bitsPerComponent = 8;</span><br><span class="line">    CGContextRef context = CGBitmapContextCreate(rawData, wanted_input_width, wanted_input_height,</span><br><span class="line"></span><br><span class="line">                                                 bitsPerComponent, bytesPerRow, colorSpace,</span><br><span class="line"></span><br><span class="line">                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);</span><br><span class="line"></span><br><span class="line">    CGColorSpaceRelease(colorSpace);</span><br><span class="line">    UIImage *retImg = [UIImage imageWithCGImage:CGBitmapContextCreateImage(context)];</span><br><span class="line">    CGContextRelease(context);</span><br><span class="line">    free(rawData);</span><br><span class="line">    return retImg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>这里说明一下，前面 python 工程已经定义了，我的输入和输出图片的大小是 512✕512。</em></p>
+<h2 id="连接-iPhone，运行工程"><a href="#连接-iPhone，运行工程" class="headerlink" title="连接 iPhone，运行工程^_^"></a>连接 iPhone，运行工程^_^</h2><hr>
+<p>最后连上手机运行，就可以自己创建自己的艺术类图片了。😊</p>
+<p>放几张运行效果图：<br><img src="http://upload-images.jianshu.io/upload_images/2641798-d105c1089f62c634.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="截图1"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-6b722e433ca66c5b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="截图2"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-1b5acd6620b5b447.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="截图3"></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/tensorflow/">tensorflow</a>, <a class="has-link-grey -link" href="/tags/机器学习/">机器学习</a>, <a class="has-link-grey -link" href="/tags/移动端/">移动端</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wepay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/06/21/小熊猫来到世界/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">小熊猫来到这个世界</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/08/22/剖析【OC】中深复制与浅复制/">
+                <span class="level-item">剖析【OC】中深复制与浅复制</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: false,
+        verify: false,
+        app_id: 'UTMT6ay76l4z8f7L5xTGDgo7-gzGzoHsz',
+        app_key: 'YzEiqgT2hio2QLCRupnfOSXz',
+        placeholder: '留下点什么吧...'
+    });
+</script>
+
+    </div>
+</div>
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="Jiao Liu">
+                    
+                    <p class="is-size-4 is-block">
+                        Jiao Liu
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Software Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Chengdu,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/JiaoLiu">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/JiaoLiu">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="简书" href="https://www.jianshu.com/u/39482dc75069">
+                
+                <i class="fa fa-book"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#前言">
+        <span class="has-mr-6">1</span>
+        <span>前言</span>
+        </a></li><li>
+        <a class="is-flex" href="#准备工作">
+        <span class="has-mr-6">2</span>
+        <span>准备工作</span>
+        </a></li><li>
+        <a class="is-flex" href="#构建计算图">
+        <span class="has-mr-6">3</span>
+        <span>构建计算图</span>
+        </a></li><li>
+        <a class="is-flex" href="#iOS-工程">
+        <span class="has-mr-6">4</span>
+        <span>iOS 工程</span>
+        </a></li><li>
+        <a class="is-flex" href="#连接-iPhone，运行工程">
+        <span class="has-mr-6">5</span>
+        <span>连接 iPhone，运行工程^_^</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/GCJ/" style="font-size: 10px;">GCJ</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/tensorflow/" style="font-size: 10px;">tensorflow</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/小熊猫/" style="font-size: 20px;">小熊猫</a> <a href="/tags/小程序/" style="font-size: 10px;">小程序</a> <a href="/tags/招财/" style="font-size: 15px;">招财</a> <a href="/tags/新生/" style="font-size: 10px;">新生</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/移动端/" style="font-size: 15px;">移动端</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+  <div class="container">
+    <div class="level">
+      <div class="level-start has-text-centered-mobile">
+        <a class="footer-logo is-block has-mb-6" href="/">
+          
+          <img src="/images/logo.png" alt="iOS实现类Prisma软件" height="28">
+          
+        </a>
+        <p class="is-size-7">
+          &copy; 2019 Jiao Liu&nbsp; All Rights Reserved.
+          <!-- at Chengdu,China -->
+        </p>
+      </div>
+      <div class="level-end">
+        
+        <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+           
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via E-mail" href="mailto:694121590@qq.com">
+              
+              <i class="fa fa-envelope"></i> 
+            </a>
+          </p>
+          
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via QQ" href="http://wpa.qq.com/msgrd?v=3&amp;uin=694121590&amp;site=jane66.com&amp;menu=yes">
+              
+              <i class="fab fa-qq"></i> 
+            </a>
+          </p>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

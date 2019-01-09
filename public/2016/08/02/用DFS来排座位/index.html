@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>用DFS来排座位 - 小熊猫的花园</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="DFS（Depth-First-Search）深度优先算法，是搜索算法的一种。是一种在开发爬虫早期使用较多的方法。它的思想是从一个顶点 V0 开始，沿着一条路一直走到底，如果发现不能到达目标解，那就返回到上一个节点，然后从另一条路开始走到底，这种尽量往深处走的概念即是深度优先的概念。 深度优先搜索是图论中的经典算法，利用深度优先搜索算法可以产生目标图的相应拓扑排序表，利用拓扑排序表可以方便的解决很">
+<meta name="keywords" content="算法,GCJ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用DFS来排座位">
+<meta property="og:url" content="http://jane66.com/2016/08/02/用DFS来排座位/index.html">
+<meta property="og:site_name" content="小熊猫的花园">
+<meta property="og:description" content="DFS（Depth-First-Search）深度优先算法，是搜索算法的一种。是一种在开发爬虫早期使用较多的方法。它的思想是从一个顶点 V0 开始，沿着一条路一直走到底，如果发现不能到达目标解，那就返回到上一个节点，然后从另一条路开始走到底，这种尽量往深处走的概念即是深度优先的概念。 深度优先搜索是图论中的经典算法，利用深度优先搜索算法可以产生目标图的相应拓扑排序表，利用拓扑排序表可以方便的解决很">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2641798-5ed96443e4c08337.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-01-08T05:32:46.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用DFS来排座位">
+<meta name="twitter:description" content="DFS（Depth-First-Search）深度优先算法，是搜索算法的一种。是一种在开发爬虫早期使用较多的方法。它的思想是从一个顶点 V0 开始，沿着一条路一直走到底，如果发现不能到达目标解，那就返回到上一个节点，然后从另一条路开始走到底，这种尽量往深处走的概念即是深度优先的概念。 深度优先搜索是图论中的经典算法，利用深度优先搜索算法可以产生目标图的相应拓扑排序表，利用拓扑排序表可以方便的解决很">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-5ed96443e4c08337.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<link rel="alternative" href="/atom.xml" title="用DFS来排座位" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?e30a7aa6e7eed9c7608595920393cdbe";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1149497,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="用DFS来排座位" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">主页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="http://upload-images.jianshu.io/upload_images/2641798-5ed96443e4c08337.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="用DFS来排座位">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-08-02T02:49:54.000Z">2016-08-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/工作/">工作</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/工作/ACM/">ACM</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分钟 读完 (大约 2051 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                用DFS来排座位
+            
+        </h1>
+        <div class="content">
+            <p>DFS（Depth-First-Search）深度优先算法，是搜索算法的一种。是一种在开发爬虫早期使用较多的方法。它的思想是从一个顶点 V0 开始，沿着一条路一直走到底，如果发现不能到达目标解，那就返回到上一个节点，然后从另一条路开始走到底，这种尽量往深处走的概念即是深度优先的概念。</p>
+<p>深度优先搜索是图论中的经典算法，利用深度优先搜索算法可以产生目标图的相应拓扑排序表，利用拓扑排序表可以方便的解决很多相关的图论问题，如最大路径问题等等。</p>
+<a id="more"></a>
+<p><img src="http://upload-images.jianshu.io/upload_images/2641798-5ed96443e4c08337.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="DFS"></p>
+<p>下面以一个具体问题来看 DFS 的实现与实用。（问题来源[GCJ2016-1A]BFFs）</p>
+<p><strong>Problem</strong><br>You are a teacher at the brand new Little Coders kindergarten. You have<strong>N</strong>kids in your class, and each one has a different student ID number from 1 through<strong>N</strong>. Every kid in your class has a single best friend forever (BFF), and you know who that BFF is for each kid. BFFs are not necessarily reciprocal – that is, B being A’s BFF does not imply that A is B’s BFF.<br>Your lesson plan for tomorrow includes an activity in which the participants must sit in a circle. You want to make the activity as successful as possible by building the largest possible circle of kids such that each kid in the circle is sitting directly next to their BFF, either to the left or to the right. Any kids not in the circle will watch the activity without participating.<br>What is the greatest number of kids that can be in the circle?<br><strong>Input</strong><br>The first line of the input gives the number of test cases,<strong>T</strong>.<strong>T</strong>test cases follow. Each test case consists of two lines. The first line of a test case contains a single integer<strong>N</strong>, the total number of kids in the class. The second line of a test case contains<strong>N</strong>integers<strong>F1</strong>,<strong>F2</strong>, …,<strong>FN</strong>, where<strong>Fi</strong>is the student ID number of the BFF of the kid with student ID i.<br><strong>Output</strong><br>For each test case, output one line containing “Case #x: y”, where x is the test case number (starting from 1) and y is the maximum number of kids in the group that can be arranged in a circle such that each kid in the circle is sitting next to his or her BFF.<br><strong>Limits</strong><br>1 ≤<strong>T</strong>≤ 100.<br>1 ≤<strong>Fi</strong>≤<strong>N</strong>, for all i.<br><strong>Fi</strong>≠ i, for all i. (No kid is their own BFF.)<br><strong>Small dataset</strong><br>3 ≤<strong>N</strong>≤ 10.<br><strong>Large dataset</strong><br>3 ≤<strong>N</strong>≤ 1000.<br><strong>Sample</strong></p>
+<blockquote>
+<p>Input<br>4<br>4<br>2 3 4 1<br>4<br>3 3 4 1<br>4<br>3 3 4 3<br>10<br>7 8 10 10 9 2 9 6 3 3<br>Output<br>Case #1: 4<br>Case #2: 3<br>Case #3: 3<br>Case #4: 6</p>
+</blockquote>
+<p>In sample case #4, the largest possible circle seats the following kids in the following order:7 9 3 10 4 1. (Any reflection or rotation of this circle would also work.) Note that the kid with student ID 1 is next to the kid with student ID 7, as required, because the list represents a circle.</p>
+<p>解释：<br>一个幼儿园，有 N 个小朋友，编号从 1 到 N，每个孩子有一个永远最好的朋友。这个 BFF 不是相互的，A 是 B 的 BFF，不代表 B 也是 A 的的 BFF。接下来明天有节课需要小朋友坐成一个圈玩游戏，但是每个孩子都希望自己的左边或者右边坐的是自己的 BFF，没坐进去的小朋友就只能观看他们玩，那么这个圈最大能坐多少个小朋友？<br>输入第一个数 T 是测试数据的组数，然后每两行为一组，第一行一个数字是 N 小朋友的个数，第二行 N 个数字是编号 1 到 N 的孩子的最好朋友编号。<br>输出每行代表每组测试数据的最大圈坐小朋友数量。</p>
+<p>分析：<br>第一步，我们需要找到每个孩子通过 BFF 这个关系单向能一共能链到多少孩子进来，这里就要用到 DFS 技术来实现。来看一下代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void dfs(int *input, bool *flag ,int start, NSMutableArray *array)</span><br><span class="line">&#123;</span><br><span class="line">    if (flag[start - 1] == true) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        flag[start - 1] = true;</span><br><span class="line">        [array addObject:[NSNumber numberWithInt:start]];</span><br><span class="line">        start = input[start - 1];</span><br><span class="line">        dfs(input, flag, start, array);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里 input 是 BFF 关系数组，flag 是标志某一个小孩是否访问过的数组，start 代表从哪个小孩开始搜索，array 是最后我们要的链。从 start 传入的小孩编号开始搜索，将 start 自己写到 array 中并标记为已访问，然后 start 更新为自己的 BFF，迭代调用 dfs，直到走到标记为已访问节点停止搜索。然后将分别从 1 到 N 编号的小孩为起点的形成的最长链的都存储起来。这里我们存在 chainArray 里面，方便后面使用。</p>
+<p>第二步，我们用刚才保存的链来拼接环，这里我们用一个数组来记录以每个孩子为起点的最大环长度 circle，同时用一个整数 maxNum 记录所有的环中最大值。然后我们开始遍历刚才记录在 chainArray 里面的链，计算他们能拼接最长环的大小。计算中分三种情况：<br>1、链的最后一位小朋友的最好朋友不是第一位与倒数第二位小孩。如：1-&gt;2-&gt;3-&gt;4，但是 4 的 BFF 是 2，那么这种链就是无效的，也不能够成环，长度就记为 0；<br>2、链的最后一位小朋友的最好朋友是第一位小孩。如：1-&gt;2-&gt;3-&gt;4，4 的 BFF 是 1，那么这种链就是自成环，长度记为链长度 4。<br>3、链的最后一位小朋友的最好朋友是倒数第二位小孩。如：1-&gt;2-&gt;3-&gt;4，4 的 BFF 是 3，这种链既自成环，又可以和其它以 3 结尾的链拼接成环，如 5-&gt;4-&gt;3，两个链拼接后就成了 1-&gt;2-&gt;3<->4&lt;-5。对于这种情况，我们就必须再次遍历所有链，找出和该链拼接后的最长链，记录为两链长度和减 2，并保存进 circle 中。<br>最后，每次更新过后环长度过后，需要更新 maxNum 的值。<br>实现代码如下：</-></p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">    for (int j = 0; j &lt; N; j++) &#123;</span><br><span class="line">        NSArray *array = [chainArray objectAtIndex:j];</span><br><span class="line">        int length = (int)array.count;</span><br><span class="line">        int LastIndex = [[array lastObject] intValue];</span><br><span class="line">        int nextValue = input[LastIndex - 1];</span><br><span class="line">        if (nextValue != [[array firstObject] intValue] &amp;&amp; nextValue != [[array objectAtIndex:array.count - 2] intValue]) &#123;</span><br><span class="line">            length = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            if (nextValue == [[array objectAtIndex:array.count - 2] intValue]) &#123;</span><br><span class="line">                int MaxLength = 0;</span><br><span class="line">                for (NSArray *item in chainArray) &#123;</span><br><span class="line">                    int newLength = 0;</span><br><span class="line">                    if ([[item lastObject] intValue] == nextValue) &#123;</span><br><span class="line">                        newLength = length + (int)[item count] - 2;</span><br><span class="line">                    &#125;</span><br><span class="line">                    MaxLength = MAX(MaxLength, newLength);</span><br><span class="line">                &#125;</span><br><span class="line">                length = MaxLength;</span><br><span class="line">                if (circle[nextValue - 1] &lt; length) &#123;</span><br><span class="line">                    circle[nextValue - 1] = length;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        maxNum = MAX(maxNum, length);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>至此，我们基本找到了以所有孩子为起点能形成的单一环，但是并不是能形成的最大环。</p>
+<p>第三步，找出最大的环大小，上面的 maxNum 已经记录了单环所能得到的最大值，但是对于如 1-&gt;2-&gt;3<->4<-5 这种回环，其实还是可以和其它回环进行拼接，如和="" 6-="">7<->8<-9 拼接，最后得到更大的环="" 1-="">2-&gt;3<->4&lt;-5\6-&gt;7<->8&lt;-9。所以我们需要把刚才 circle 中记录的回环长度都加起来除以 2，再来更新 maxNum 得到最终的结果，代码如下：</-></-></-9></-></-5></-></p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    int tot = 0;</span><br><span class="line">    for (int k = 0; k &lt; N; k ++) &#123;</span><br><span class="line">        tot += circle[k];</span><br><span class="line">    &#125;</span><br><span class="line">    maxNum = MAX(maxNum, tot / 2);</span><br><span class="line">    return maxNum;</span><br></pre></td></tr></table></figure>
+<p>至此，我们就完美的利用 DFS 完成了对小朋友排座位的任务。<br>看一下输出判定结果：</p>
+<blockquote>
+<p>Small input<br>16 pointsSolve C-small<br>Judge’s response for last submission: Correct.<br>Large input<br>29 pointsSolve C-large<br>Judge’s response for last submission: Correct.</p>
+</blockquote>
+<p>完整代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  main.m</span><br><span class="line">//  BFFs</span><br><span class="line">//</span><br><span class="line">//  Created by Jiao Liu on 4/16/16.</span><br><span class="line">//  Copyright © 2016 ChangHong. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">void dfs(int *input, bool *flag ,int start, NSMutableArray *array)</span><br><span class="line">&#123;</span><br><span class="line">    if (flag[start - 1] == true) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        flag[start - 1] = true;</span><br><span class="line">        [array addObject:[NSNumber numberWithInt:start]];</span><br><span class="line">        start = input[start - 1];</span><br><span class="line">        dfs(input, flag, start, array);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">long maxCircle(int *input, int N)</span><br><span class="line">&#123;</span><br><span class="line">    long maxNum = 0;</span><br><span class="line">    </span><br><span class="line">    NSMutableArray *chainArray = [NSMutableArray array];</span><br><span class="line">    int circle[N];</span><br><span class="line">    memset(circle, 0, sizeof(circle));</span><br><span class="line">    for (int i = 0; i &lt; N; i++) &#123;</span><br><span class="line">        bool flag[N];</span><br><span class="line">        memset(flag, false, sizeof(flag));</span><br><span class="line">        NSMutableArray *array = [NSMutableArray array];</span><br><span class="line">        dfs(input, flag, i + 1, array);</span><br><span class="line">        [chainArray addObject:array];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    for (int j = 0; j &lt; N; j++) &#123;</span><br><span class="line">        NSArray *array = [chainArray objectAtIndex:j];</span><br><span class="line">        int length = (int)array.count;</span><br><span class="line">        int LastIndex = [[array lastObject] intValue];</span><br><span class="line">        int nextValue = input[LastIndex - 1];</span><br><span class="line">        if (nextValue != [[array firstObject] intValue] &amp;&amp; nextValue != [[array objectAtIndex:array.count - 2] intValue]) &#123;</span><br><span class="line">            length = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            if (nextValue == [[array objectAtIndex:array.count - 2] intValue]) &#123;</span><br><span class="line">                int MaxLength = 0;</span><br><span class="line">                for (NSArray *item in chainArray) &#123;</span><br><span class="line">                    int newLength = 0;</span><br><span class="line">                    if ([[item lastObject] intValue] == nextValue) &#123;</span><br><span class="line">                        newLength = length + (int)[item count] - 2;</span><br><span class="line">                    &#125;</span><br><span class="line">                    MaxLength = MAX(MaxLength, newLength);</span><br><span class="line">                &#125;</span><br><span class="line">                length = MaxLength;</span><br><span class="line">                if (circle[nextValue - 1] &lt; length) &#123;</span><br><span class="line">                    circle[nextValue - 1] = length;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        maxNum = MAX(maxNum, length);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    int tot = 0;</span><br><span class="line">    for (int k = 0; k &lt; N; k ++) &#123;</span><br><span class="line">        tot += circle[k];</span><br><span class="line">    &#125;</span><br><span class="line">    maxNum = MAX(maxNum, tot / 2);</span><br><span class="line">    return maxNum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        freopen(&quot;/Users/Jiao/Desktop/CodeJam/BFFs/C-large-practice.in&quot;, &quot;r&quot;, stdin);</span><br><span class="line">//        freopen(&quot;/Users/Jiao/Desktop/CodeJam/BFFs/C-large-practice.out&quot;, &quot;w&quot;, stdout);</span><br><span class="line">        int T;</span><br><span class="line">        scanf(&quot;%d&quot;,&amp;T);</span><br><span class="line">        for (int i = 1; i&lt;=T; i++) &#123;</span><br><span class="line">            int N;</span><br><span class="line">            scanf(&quot;%d&quot;,&amp;N);</span><br><span class="line">            int Bffs[N];</span><br><span class="line">            for (int j = 0; j&lt;N; j++) &#123;</span><br><span class="line">                int bestFriend;</span><br><span class="line">                scanf(&quot;%d&quot;,&amp;bestFriend);</span><br><span class="line">                Bffs[j]=bestFriend;</span><br><span class="line">            &#125;</span><br><span class="line">            printf(&quot;Case #%d: %ld\n&quot;,i,maxCircle(Bffs,N));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/GCJ/">GCJ</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wepay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/08/04/2016微软探星-Constraint-Checker/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2016微软探星 | Constraint Checker</span>
+            </a>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: false,
+        verify: false,
+        app_id: 'UTMT6ay76l4z8f7L5xTGDgo7-gzGzoHsz',
+        app_key: 'YzEiqgT2hio2QLCRupnfOSXz',
+        placeholder: '留下点什么吧...'
+    });
+</script>
+
+    </div>
+</div>
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="Jiao Liu">
+                    
+                    <p class="is-size-4 is-block">
+                        Jiao Liu
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Software Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Chengdu,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/JiaoLiu">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/JiaoLiu">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="简书" href="https://www.jianshu.com/u/39482dc75069">
+                
+                <i class="fa fa-book"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/GCJ/" style="font-size: 10px;">GCJ</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/tensorflow/" style="font-size: 10px;">tensorflow</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/小熊猫/" style="font-size: 20px;">小熊猫</a> <a href="/tags/小程序/" style="font-size: 10px;">小程序</a> <a href="/tags/招财/" style="font-size: 15px;">招财</a> <a href="/tags/新生/" style="font-size: 10px;">新生</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/移动端/" style="font-size: 15px;">移动端</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/chmini-app/CHCharts-wechat" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CHCharts</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/工作/">
+            <span class="level-start">
+                <span class="level-item">工作</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/工作/ACM/">
+            <span class="level-start">
+                <span class="level-item">ACM</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/iOS/">
+            <span class="level-start">
+                <span class="level-item">iOS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工作/小程序/">
+            <span class="level-start">
+                <span class="level-item">小程序</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/生活/小熊猫/">
+            <span class="level-start">
+                <span class="level-item">小熊猫</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/招财/">
+            <span class="level-start">
+                <span class="level-item">招财</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/01/08/我的第一个证书/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0032.jpg" alt="我的第一个证书">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T05:44:49.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/我的第一个证书/" class="has-link-black-ter is-size-6">我的第一个证书</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/06/又吃辅食了啦😊/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0027.jpg" alt="又吃辅食了啦😊">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-06T05:24:35.000Z">2019-01-06</time></div>
+                    <a href="/2019/01/06/又吃辅食了啦😊/" class="has-link-black-ter is-size-6">又吃辅食了啦😊</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/02/努力努力/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0010.jpg" alt="努力努力">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-02T10:07:45.000Z">2019-01-02</time></div>
+                    <a href="/2019/01/02/努力努力/" class="has-link-black-ter is-size-6">努力努力</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/小熊猫/">小熊猫</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/减肥/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0002.jpg" alt="减肥">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:36:39.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/减肥/" class="has-link-black-ter is-size-6">减肥</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/11/08/招财捣蛋日常/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallary/IMG_0006.jpg" alt="招财捣蛋日常">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-11-08T09:15:09.000Z">2018-11-08</time></div>
+                    <a href="/2018/11/08/招财捣蛋日常/" class="has-link-black-ter is-size-6">招财捣蛋日常</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/生活/">生活</a> / <a class="has-link-grey -link" href="/categories/生活/招财/">招财</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/GCJ/">
+                        <span class="level-start">
+                            <span class="level-item">GCJ</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/html/">
+                        <span class="level-start">
+                            <span class="level-item">html</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/tensorflow/">
+                        <span class="level-start">
+                            <span class="level-item">tensorflow</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/前端/">
+                        <span class="level-start">
+                            <span class="level-item">前端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小熊猫/">
+                        <span class="level-start">
+                            <span class="level-item">小熊猫</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">6</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/小程序/">
+                        <span class="level-start">
+                            <span class="level-item">小程序</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/招财/">
+                        <span class="level-start">
+                            <span class="level-item">招财</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/新生/">
+                        <span class="level-start">
+                            <span class="level-item">新生</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/机器学习/">
+                        <span class="level-start">
+                            <span class="level-item">机器学习</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/移动端/">
+                        <span class="level-start">
+                            <span class="level-item">移动端</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/算法/">
+                        <span class="level-start">
+                            <span class="level-item">算法</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">2</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+  <div class="container">
+    <div class="level">
+      <div class="level-start has-text-centered-mobile">
+        <a class="footer-logo is-block has-mb-6" href="/">
+          
+          <img src="/images/logo.png" alt="用DFS来排座位" height="28">
+          
+        </a>
+        <p class="is-size-7">
+          &copy; 2019 Jiao Liu&nbsp; All Rights Reserved.
+          <!-- at Chengdu,China -->
+        </p>
+      </div>
+      <div class="level-end">
+        
+        <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+           
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via E-mail" href="mailto:694121590@qq.com">
+              
+              <i class="fa fa-envelope"></i> 
+            </a>
+          </p>
+          
+          <p class="control">
+            <a class="button is-white is-large" target="_parent" title="Contact via QQ" href="http://wpa.qq.com/msgrd?v=3&amp;uin=694121590&amp;site=jane66.com&amp;menu=yes">
+              
+              <i class="fab fa-qq"></i> 
+            </a>
+          </p>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
