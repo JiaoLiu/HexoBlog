@@ -85,7 +85,9 @@ theme: icarus
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/JiaoLiu/jiaoliu.github.io.git
+  repository:
+    github: https://github.com/JiaoLiu/jiaoliu.github.io.git
+    coding: https://git.coding.net/liujiao1234/liujiao1234.git
   branch: master
 
 markdown:
