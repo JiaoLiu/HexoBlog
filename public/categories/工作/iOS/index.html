@@ -190,11 +190,12 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+            <h2 id="前言"><a class="header-anchor" href="#前言">¶</a>前言</h2>
+<hr>
 <p>Prisma 在 2016 上线后就大火，该 APP 是利用<a href="https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" target="_blank" rel="noopener">神经网络</a>和<a href="https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD" target="_blank" rel="noopener">人工智能</a>技术，为普通照片加入艺术效果的照片编辑软件。</p>
 <p>同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。</p>
 <p>最近在研究 Tensorflow 整合 iOS 过程中，发现 google 公开了论文实现的源码和训练数据，也就是说我们可以通过自己写一个前向运算图，整合其训练参数就可以快速实现类 Prisma 的应用。</p>
-<p>下面就介绍一下如何在 iPhone 上跑一个自己的<strong>“Prisma”</strong>。</p>
+<p>下面就介绍一下如何在 iPhone 上跑一个自己的**“Prisma”**。</p>
         </div>
         
         
@@ -254,7 +255,8 @@ var _hmt = _hmt || [];
             <p>在 OC 编程中，常常会用到对对象的复制，然后操作副本对象。然而对与应该选择何种对象复制的方式，复制后副本对象操作会不会影响原始对象等问题，我们往往没有过多考虑，而是凭借经验在编码。接下来就对 OC 中对象复制机制进行剖析，通过对复制机制的研究可以在编码中对对象的复制更加游刃有余。</p>
 <p>首先，在 OC 中复制分为深复制与浅复制，一个比较认可的定义是：</p>
 <blockquote>
-<p><strong>深复制：</strong>复制对象引用与对象本身。<br><strong>浅复制：</strong>只复制对象引用。</p>
+<p>**深复制：**复制对象引用与对象本身。 <br>
+**浅复制：**只复制对象引用。</p>
 </blockquote>
         </div>
         
