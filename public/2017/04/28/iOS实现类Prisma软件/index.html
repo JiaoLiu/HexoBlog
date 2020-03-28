@@ -6,10 +6,7 @@
     <meta charset="utf-8">
 <title>iOS实现类Prisma软件 - 小熊猫的花园</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-
-
-    <meta name="description" content="¶前言  Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow">
+  <meta name="description" content="¶前言  Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow">
 <meta name="keywords" content="移动端,机器学习,tensorflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS实现类Prisma软件">
@@ -26,55 +23,29 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS实现类Prisma软件">
 <meta name="twitter:description" content="¶前言  Prisma 在 2016 上线后就大火，该 APP 是利用神经网络和人工智能技术，为普通照片加入艺术效果的照片编辑软件。 同年 Google 也发布了一篇《A LEARNED REPRESENTATION FOR ARTISTIC STYLE》论文，实现了前向运算一次为照片整合多种艺术风格的功能，并且优化了内存使用和运算速度，可以在移动设备上快速运算。 最近在研究 Tensorflow">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-
-
-
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-ab4749c205d9f6f8.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">  
 <link rel="alternative" href="/atom.xml" title="iOS实现类Prisma软件" type="application/atom+xml">
-
-
-
+ 
 <link rel="icon" href="/images/favicon.png">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
-
-
-    
-    
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css"> <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">   
     
     <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
-
-    
-    
+  
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
     
-
-    
-    
+  
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
-
-    
-    
-    
     
 
 <link rel="stylesheet" href="/css/back-to-top.css">
 
-
-    
-    
-
-    
-    
+  
+  
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -84,20 +55,27 @@ var _hmt = _hmt || [];
     s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-    
-    
+  
 <link rel="stylesheet" href="/css/progressbar.css">
 <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
+  
     
-    
-    
+   <link rel="stylesheet" href="/css/style.css">
 
-    
+<script>
+  ;(function() {
+    var bp = document.createElement('script')
+    var curProtocol = window.location.protocol.split(':')[0]
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
+    } else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js'
+    }
+    var s = document.getElementsByTagName('script')[0]
+    s.parentNode.insertBefore(bp, s)
+  })()
+</script>
 
-
-<link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="is-3-column">
     <nav class="navbar navbar-main">
@@ -1649,10 +1627,13 @@ Monet 训练了 10 种艺术图片，Varied 训练了 32 种。<br>
         </a>
         <p class="is-size-7">
           &copy; 2020 Jiao Liu&nbsp; All Rights Reserved.
+          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
           <!-- at Chengdu,China -->
         </p>
         <p class="is-size-7">
-          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
+          <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51019002002636" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/beian.png" style="float:left;">
+            &nbsp;川公网安备 51019002002636号
+          </a>
         </p>
       </div>
       <div class="level-end">

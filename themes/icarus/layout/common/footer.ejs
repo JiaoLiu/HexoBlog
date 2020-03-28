@@ -15,10 +15,17 @@
         <p class="is-size-7">
           &copy; <%= date(new Date(), 'YYYY') %> <%= get_config('author') ||
           get_config('title') %>&nbsp; All Rights Reserved.
+          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
           <!-- at <%= get_config('location') %> -->
         </p>
         <p class="is-size-7">
-          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
+          <a
+            target="_blank"
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51019002002636"
+            style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"
+            ><img src="/images/beian.png" style="float:left;" />
+            &nbsp;川公网安备 51019002002636号
+          </a>
         </p>
       </div>
       <div class="level-end">

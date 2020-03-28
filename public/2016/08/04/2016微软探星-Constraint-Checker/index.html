@@ -6,10 +6,7 @@
     <meta charset="utf-8">
 <title>2016微软探星 | Constraint Checker - 小熊猫的花园</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-
-
-    <meta name="description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。 本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
+  <meta name="description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。 本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
 <meta name="keywords" content="算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2016微软探星 | Constraint Checker">
@@ -23,55 +20,29 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2016微软探星 | Constraint Checker">
 <meta name="twitter:description" content="题目来源于 2016 年微软探星夏令营在线技术笔试，笔试结果是作为甄选微软 2016 校招技术类职位的重要参考之一。这个考试对于想进微软实习或工作的在校生来说还是蛮重要的。 本人闲来无聊也注册了帐号尝试了第一题，代码用 C++实现，比较乱，侥幸一次通过。下面直接看一下考题。">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-
-
-
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2641798-0227972e7244b9eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">  
 <link rel="alternative" href="/atom.xml" title="2016微软探星 | Constraint Checker" type="application/atom+xml">
-
-
-
+ 
 <link rel="icon" href="/images/favicon.png">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
-
-
-    
-    
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css"> <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">   
     
     <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
-
-    
-    
+  
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
     
-
-    
-    
+  
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
-
-    
-    
-    
     
 
 <link rel="stylesheet" href="/css/back-to-top.css">
 
-
-    
-    
-
-    
-    
+  
+  
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -81,20 +52,27 @@ var _hmt = _hmt || [];
     s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-    
-    
+  
 <link rel="stylesheet" href="/css/progressbar.css">
 <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
+  
     
-    
-    
+   <link rel="stylesheet" href="/css/style.css">
 
-    
+<script>
+  ;(function() {
+    var bp = document.createElement('script')
+    var curProtocol = window.location.protocol.split(':')[0]
+    if (curProtocol === 'https') {
+      bp.src = 'https://zz.bdstatic.com/linksubmit/push.js'
+    } else {
+      bp.src = 'http://push.zhanzhang.baidu.com/push.js'
+    }
+    var s = document.getElementsByTagName('script')[0]
+    s.parentNode.insertBefore(bp, s)
+  })()
+</script>
 
-
-<link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="is-3-column">
     <nav class="navbar navbar-main">
@@ -1626,10 +1604,13 @@ No</p>
         </a>
         <p class="is-size-7">
           &copy; 2020 Jiao Liu&nbsp; All Rights Reserved.
+          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
           <!-- at Chengdu,China -->
         </p>
         <p class="is-size-7">
-          <a href="https://www.beian.miit.gov.cn">蜀ICP备20007431号</a>
+          <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51019002002636" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/beian.png" style="float:left;">
+            &nbsp;川公网安备 51019002002636号
+          </a>
         </p>
       </div>
       <div class="level-end">
