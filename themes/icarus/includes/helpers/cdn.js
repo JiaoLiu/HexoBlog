@@ -16,7 +16,8 @@ const cdn_providers = {
 
 const font_providers = {
   // fonts.googleapis.com
-  google: 'https://fonts.geekzu.org/${ type }?family=${ fontname }'
+  geekzu: 'https://fonts.geekzu.org/${ type }?family=${ fontname }',
+  loli: 'https://fonts.loli.net/${ type }?family=${ fontname }'
 }
 
 const icon_providers = {
