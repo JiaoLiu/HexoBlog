@@ -8,10 +8,15 @@
  */
 const cdn_providers = {
   cdnjs:
-    'https://cdnjs.cloudflare.com/ajax/libs/${ package }/${ version }/${ filename }',
+    'https://cdnjs.onmicrosoft.cn/ajax/libs/${ package }/${ version }/${ filename }',
   jsdelivr:
-    'https://cdn.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
-  unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }'
+    'https://jsd.onmicrosoft.cn/npm/${ package }@${ version }/${ filename }',
+  unpkg: 'https://npm.onmicrosoft.cn/${ package }@${ version }/${ filename }'
+  // cdnjs:
+  //   'https://cdnjs.cloudflare.com/ajax/libs/${ package }/${ version }/${ filename }',
+  // jsdelivr:
+  //   'https://cdn.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
+  // unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }'
 }
 
 const font_providers = {
@@ -25,8 +30,8 @@ const icon_providers = {
   fontawesome: 'https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css'
 }
 
-module.exports = function(hexo) {
-  hexo.extend.helper.register('cdn', function(_package, version, filename) {
+module.exports = function (hexo) {
+  hexo.extend.helper.register('cdn', function (_package, version, filename) {
     let provider = hexo.extend.helper.get('get_config').bind(this)(
       'providers.cdn'
     )
@@ -75,7 +80,7 @@ module.exports = function(hexo) {
       .replace(/\${\s*filename\s*}/gi, filename)
   })
 
-  hexo.extend.helper.register('fontcdn', function(fontName, type = 'css') {
+  hexo.extend.helper.register('fontcdn', function (fontName, type = 'css') {
     let provider = hexo.extend.helper.get('get_config').bind(this)(
       'providers.fontcdn'
     )
@@ -87,7 +92,7 @@ module.exports = function(hexo) {
       .replace(/\${\s*type\s*}/gi, type)
   })
 
-  hexo.extend.helper.register('iconcdn', function(provider = null) {
+  hexo.extend.helper.register('iconcdn', function (provider = null) {
     if (provider !== null && icon_providers.hasOwnProperty(provider)) {
       provider = icon_providers[provider]
     } else {
