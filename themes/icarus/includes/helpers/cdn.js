@@ -8,10 +8,10 @@
  */
 const cdn_providers = {
   cdnjs:
-    'https://cdnjs.onmicrosoft.cn/ajax/libs/${ package }/${ version }/${ filename }',
+    'https://cdnjs.loli.netajax/libs/${ package }/${ version }/${ filename }',
   jsdelivr:
-    'https://jsd.onmicrosoft.cn/npm/${ package }@${ version }/${ filename }',
-  unpkg: 'https://npm.onmicrosoft.cn/${ package }@${ version }/${ filename }'
+    'https://gcore.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
+  unpkg: 'https://npm.elemecdn.com/${ package }@${ version }/${ filename }'
   // cdnjs:
   //   'https://cdnjs.cloudflare.com/ajax/libs/${ package }/${ version }/${ filename }',
   // jsdelivr:
