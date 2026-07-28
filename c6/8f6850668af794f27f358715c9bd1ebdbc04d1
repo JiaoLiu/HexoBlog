@@ -1,0 +1,44 @@
+.gitignore
+  aa1428d3404b0ffb 3-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.2",
+  "base_commit_sha": "c68f6850668af794f27f358715c9bd1ebdbc04d1",
+  "prompts": {
+    "aa1428d3404b0ffb": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "699fb84fcca66e98264083bf",
+        "model": "unknown"
+      },
+      "human_author": "liujiao <liujiao@cmhi.chinamobile.com>",
+      "messages": [],
+      "total_additions": 21,
+      "total_deletions": 5,
+      "accepted_lines": 20,
+      "overriden_lines": 0
+    }
+  },
+  "commit_stats": {
+    "git_diff_added_lines": 3,
+    "git_diff_deleted_lines": 0,
+    "ai_additions": 3,
+    "ai_accepted": 3,
+    "BYMC": 0,
+    "mixed_additions": 0,
+    "BYAC": 3,
+    "BYRC": 0,
+    "per_file": {
+      ".gitignore": {
+        "BYMC": [],
+        "BYAC": [
+          "3-5"
+        ],
+        "BYRC": []
+      }
+    }
+  },
+  "commit_timestamp": 1785209157,
+  "requirement_id": ""
+}
