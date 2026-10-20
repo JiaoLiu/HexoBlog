@@ -5,8 +5,9 @@
     </div>
     <% } else { %>
         <div id="valine-thread"></div>
-        <!-- <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script> -->
-        <script src='//npm.onmicrosoft.cn/valine/dist/Valine.min.js'></script>
+        <!-- 先加载 LeanCloud SDK，避免 Valine 内部从国内不可达的 cdn.jsdelivr.net 拉取 -->
+        <script src="https://gcore.jsdelivr.net/npm/leancloud-storage@3.15.0/dist/av-min.js"></script>
+        <script src="https://gcore.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
         <script>
             new Valine({
                 el: '#valine-thread',

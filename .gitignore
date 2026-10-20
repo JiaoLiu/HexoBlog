@@ -3,3 +3,9 @@
 node_modules/
 db.json
 public/
+gallary_origin/
+
+# 由 gallary_origin/ 或 source/gallary/ 自动生成的派生图，不入库
+source/gallary/s/
+source/gallary/thumbs/
+source/gallary/l/

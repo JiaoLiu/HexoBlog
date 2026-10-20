@@ -9,7 +9,7 @@
             <% if (!has_config('article.thumbnail') || get_config('article.thumbnail') !== false) { %>
             <a href="<%- url_for((post.link?post.link:post.path)) %>" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="<%= get_thumbnail(post) %>" alt="<%= post.title %>">
+                    <img class="thumbnail" src="<%= get_thumbnail(post) %>" alt="<%= post.title %>" loading="lazy" decoding="async">
                 </p>
             </a>
             <% } %>

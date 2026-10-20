@@ -5,7 +5,7 @@
         <i class="fab fa-alipay"></i>
     </span>
     <span><%= __('donate.' + type) %></span>
-    <div class="qrcode"><img src="<%= url_for(qrcode) %>" alt="<%= __('donate.' + type) %>"></div>
+    <div class="qrcode"><img src="<%= url_for(qrcode) %>" alt="<%= __('donate.' + type) %>" loading="lazy" decoding="async"></div>
 </a>
 <% } else { %>
 <div class="notification is-danger">

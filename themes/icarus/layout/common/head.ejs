@@ -24,7 +24,7 @@ _css(cdn('highlight.js', '9.12.0', 'styles/' + get_config('article.highlight') +
 '.css')) %> <% if (has_config('plugins')) { %> <% for (let plugin in
 get_config('plugins')) { %> <%- partial('plugin/' + plugin, { head: true,
 plugin: get_config('plugins')[plugin] }) %> <% } %> <% } %> <%-
-_css('css/style') %>
+_css('css/style') %> <%- _css('css/image-enhance') %>
 
 <script>
   ;(function() {
