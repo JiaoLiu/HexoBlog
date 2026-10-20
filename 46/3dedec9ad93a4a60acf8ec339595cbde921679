@@ -1,0 +1,87 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.2",
+  "base_commit_sha": "463dedec9ad93a4a60acf8ec339595cbde921679",
+  "prompts": {
+    "aa1428d3404b0ffb": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "699fb84fcca66e98264083bf",
+        "model": "unknown"
+      },
+      "human_author": "liujiao <liujiao@cmhi.chinamobile.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    }
+  },
+  "commit_stats": {
+    "git_diff_added_lines": 105,
+    "git_diff_deleted_lines": 102,
+    "ai_additions": 0,
+    "ai_accepted": 0,
+    "BYMC": 101,
+    "mixed_additions": 0,
+    "BYAC": 0,
+    "BYRC": 0,
+    "per_file": {
+      "themes/icarus/includes/helpers/page.js": {
+        "BYMC": [
+          "95-96",
+          "110"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/scripts/index.js": {
+        "BYMC": [
+          "21-22",
+          "27-28",
+          "32",
+          "38"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "图片资源维护.md": {
+        "BYMC": [
+          "3-6",
+          "11-12",
+          "15",
+          "17-24",
+          "28",
+          "30-34",
+          "45-46",
+          "49",
+          "65",
+          "69",
+          "80",
+          "82-87",
+          "92",
+          "96-116",
+          "122-123",
+          "132",
+          "136-140",
+          "142",
+          "144",
+          "146-147",
+          "149-155",
+          "157-158",
+          "164-167",
+          "171",
+          "175-179",
+          "182",
+          "184-185",
+          "187-189"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      }
+    }
+  },
+  "commit_timestamp": 1792492495,
+  "requirement_id": ""
+}
