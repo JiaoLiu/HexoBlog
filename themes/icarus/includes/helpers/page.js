@@ -92,8 +92,8 @@ module.exports = function (hexo) {
     hexo.extend.helper.register('get_thumbnail', function (post) {
         const hasThumbnail = hexo.extend.helper.get('has_thumbnail').bind(this)(post);
         let thumbnail = hasThumbnail ? post.thumbnail : 'images/thumbnail.svg';
-        // 列表页/首页使用 400px 缩略图，避免加载原图
-        thumbnail = thumbnail.replace(/^\/gallary\/([^/]+)$/, '/gallary/thumbs/$1');
+        // 列表页/首页使用 400px 缩略图，由 nginx 实时缩放并缓存
+        thumbnail = thumbnail.replace(/^\/gallary\/([^/]+)$/, '/img/w400/$1');
         return this.url_for(thumbnail);
     });
 
@@ -107,7 +107,7 @@ module.exports = function (hexo) {
 
         const name = matched[1];
         return [
-            `${this.url_for('/gallary/thumbs/' + name)} 400w`,
+            `${this.url_for('/img/w400/' + name)} 400w`,
             `${this.url_for('/gallary/' + name)} 1280w`
         ].join(', ');
     });
