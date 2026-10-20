@@ -1,0 +1,149 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.2",
+  "base_commit_sha": "b59f378e17486e49202f1c38e7694e89e52d7e2e",
+  "prompts": {
+    "aa1428d3404b0ffb": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "699fb84fcca66e98264083bf",
+        "model": "unknown"
+      },
+      "human_author": "liujiao <liujiao@cmhi.chinamobile.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    }
+  },
+  "commit_stats": {
+    "git_diff_added_lines": 577,
+    "git_diff_deleted_lines": 691322,
+    "ai_additions": 0,
+    "ai_accepted": 0,
+    "BYMC": 525,
+    "mixed_additions": 0,
+    "BYAC": 0,
+    "BYRC": 0,
+    "per_file": {
+      ".gitignore": {
+        "BYMC": [
+          "6-11"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "source/_posts/我的周岁记录🎞️.md": {
+        "BYMC": [
+          "35"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/includes/helpers/page.js": {
+        "BYMC": [
+          "94-97",
+          "99-114"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/archive.ejs": {
+        "BYMC": [
+          "14"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/comment/valine.ejs": {
+        "BYMC": [
+          "8-10"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/common/article.ejs": {
+        "BYMC": [
+          "3-10",
+          "13-33",
+          "41-43",
+          "56-57",
+          "66-69",
+          "79-91",
+          "102-107",
+          "113-117",
+          "126-135"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/common/head.ejs": {
+        "BYMC": [
+          "27"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/common/scripts.ejs": {
+        "BYMC": [
+          "11-12"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/donate/alipay.ejs": {
+        "BYMC": [
+          "8"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/donate/wechat.ejs": {
+        "BYMC": [
+          "8"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/layout/widget/recent_posts.ejs": {
+        "BYMC": [
+          "12"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/scripts/index.js": {
+        "BYMC": [
+          "19-55"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/source/css/image-enhance.css": {
+        "BYMC": [
+          "1-75"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "themes/icarus/source/js/image-enhance.js": {
+        "BYMC": [
+          "1-119"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      },
+      "图片资源维护.md": {
+        "BYMC": [
+          "1-185"
+        ],
+        "BYAC": [],
+        "BYRC": []
+      }
+    }
+  },
+  "commit_timestamp": 1792489398,
+  "requirement_id": ""
+}
